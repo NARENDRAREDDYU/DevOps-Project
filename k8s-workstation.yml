@@ -1,0 +1,56 @@
+---
+- name: Host website
+  hosts: k8s-workstation
+  become: yes
+  vars:
+    dest: /home/centos/awscliv2.zip
+  tasks:
+  - name: Download AWS CLI
+    ansible.builtin.get_url:
+      url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+      dest: "{{ dest }}"
+      mode: '0440'
+
+  - name: Unarchive a file that is already on the remote machine
+    ansible.builtin.unarchive:
+      src: "{{ dest }}"
+      dest: /home/centos
+      remote_src: yes
+
+  - name: Execute the command in remote shell; stdout goes to the specified file on the remote
+    ansible.builtin.shell: 
+      /home/centos/aws/install
+
+  - name: Download Cli
+    shell:
+      cmd: curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_na             me | cut -d '"' -f 4)/kops-linux-amd64
+      dest: "{{ dest }}"
+      mode: '0440'
+  - name: Move the command
+    copy:
+      src: kops-linux-amd64
+      dest: /usr/local/bin/kop
+      remote_src: yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+...
+
+
